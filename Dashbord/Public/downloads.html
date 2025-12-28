@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Downloads - WhatsApp Bot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a1628;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a2a4a 0%, #0d1929 100%);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #1e3a5f;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-link {
+            color: #00d9ff;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1a2a4a 0%, #0d1929 100%);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #1e3a5f;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: #00d9ff;
+        }
+
+        .stat-card .icon { font-size: 2rem; margin-bottom: 8px; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: #00d9ff; }
+        .stat-card .label { font-size: 0.85rem; color: #8899a6; margin-top: 5px; }
+
+        /* View Tabs */
+        .view-tabs {
+            max-width: 1400px;
+            margin: 0 auto 20px;
+            padding: 0 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .view-tab {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid #1e3a5f;
+            background: transparent;
+            color: #8899a6;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .view-tab.active, .view-tab:hover {
+            background: #00d9ff;
+            color: #0a1628;
+            border-color: #00d9ff;
+        }
+
+        /* Filters */
+        .filters {
+            max-width: 1400px;
+            margin: 0 auto 20px;
+            padding: 0 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-input, .filter-select {
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid #1e3a5f;
+            background: #1a2a4a;
+            color: white;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #00d9ff;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d9ff 0%, #00a8cc 100%);
+            color: #0a1628;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00d26a 0%, #00b359 100%);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #1e3a5f;
+            color: #8899a6;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+
+        /* Grid View */
+        .media-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* WhatsApp Style Cards */
+        .media-card {
+            background: #1a2a4a;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #1e3a5f;
+            transition: all 0.3s;
+        }
+
+        .media-card:hover {
+            transform: translateY(-5px);
+            border-color: #00d9ff;
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.1);
+        }
+
+        .media-preview {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            background: #0d1929;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .media-preview img, .media-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .media-type-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-image { background: #00d26a; color: white; }
+        .badge-video { background: #ff4757; color: white; }
+        .badge-audio { background: #9c27b0; color: white; }
+        .badge-text { background: #ff9f43; color: white; }
+        .badge-sticker { background: #00d9ff; color: #0a1628; }
+
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .favorite-btn:hover { background: rgba(0, 0, 0, 0.8); }
+        .favorite-btn.active { color: #ff4757; }
+
+        .duration-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .media-icon {
+            font-size: 4rem;
+            opacity: 0.5;
+        }
+
+        .text-preview {
+            padding: 20px;
+            font-size: 14px;
+            text-align: center;
+            word-wrap: break-word;
+            max-height: 200px;
+            overflow: hidden;
+        }
+
+        .media-info {
+            padding: 15px;
+        }
+
+        .sender-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d9ff 0%, #00a8cc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0a1628;
+        }
+
+        .sender-details { flex: 1; }
+        .sender-name { font-weight: 600; font-size: 14px; }
+        .sender-number { font-size: 12px; color: #8899a6; }
+
+        .media-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #8899a6;
+            margin-bottom: 12px;
+        }
+
+        .media-caption {
+            font-size: 13px;
+            color: #ccc;
+            padding: 10px;
+            background: #0d1929;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .media-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .media-actions .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        /* Timeline View */
+        .timeline-view {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .timeline-date {
+            background: #1a2a4a;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #1e3a5f;
+        }
+
+        .timeline-date h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .timeline-date .counts {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #8899a6;
+        }
+
+        .timeline-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            background: #1a2a4a;
+        }
+
+        .timeline-item img, .timeline-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal-content img, .modal-content video {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: white;
+            font-size: 36px;
+            cursor: pointer;
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 48px;
+            color: white;
+            cursor: pointer;
+            padding: 20px;
+            opacity: 0.7;
+        }
+
+        .modal-nav:hover { opacity: 1; }
+        .modal-nav.prev { left: -80px; }
+        .modal-nav.next { right: -80px; }
+
+        .modal-info {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #8899a6;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            max-width: 100%;
+            height: 100%;
+            background: #1a2a4a;
+            z-index: 1001;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+        }
+
+        .settings-panel.active { display: block; }
+
+        .settings-header {
+            padding: 20px;
+            border-bottom: 1px solid #1e3a5f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .settings-body { padding: 20px; }
+
+        .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .setting-group h4 {
+            margin-bottom: 15px;
+            color: #00d9ff;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #1e3a5f;
+        }
+
+        .setting-item label { font-size: 14px; }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0d1929;
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: #00d9ff;
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Pagination */
+        .pagination {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-info {
+            color: #8899a6;
+            font-size: 14px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #8899a6;
+        }
+
+        .empty-state .icon { font-size: 5rem; margin-bottom: 20px; opacity: 0.5; }
+        .empty-state h3 { font-size: 1.5rem; margin-bottom: 10px; color: #fff; }
+
+        /* Selection Mode */
+        .selection-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a2a4a;
+            padding: 15px 20px;
+            border-top: 1px solid #1e3a5f;
+            z-index: 100;
+        }
+
+        .selection-bar.active { display: flex; justify-content: space-between; align-items: center; }
+
+        .selection-checkbox {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid white;
+            cursor: pointer;
+            display: none;
+        }
+
+        .selection-mode .selection-checkbox { display: flex; align-items: center; justify-content: center; }
+        .selection-checkbox.checked { background: #00d9ff; border-color: #00d9ff; }
+        .selection-checkbox.checked::after { content: '✓'; color: #0a1628; font-weight: bold; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; align-items: stretch; }
+            .stats-bar { grid-template-columns: repeat(3, 1fr); }
+            .media-grid { grid-template-columns: repeat(2, 1fr); }
+            .filters { flex-direction: column; }
+            .filter-input, .filter-select { width: 100%; }
+            .settings-panel { width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .media-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div>
+                <a href="index.html" class="back-link">← Back to Dashboard</a>
+                <h1>📥 Status Downloads</h1>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="toggleSelectionMode()">☑️ Select</button>
+                <button class="btn btn-primary" onclick="openSettings()">⚙️ Settings</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="icon">📊</div>
+            <div class="value" id="totalCount">0</div>
+            <div class="label">Total</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">🖼️</div>
+            <div class="value" id="imageCount">0</div>
+            <div class="label">Images</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">🎬</div>
+            <div class="value" id="videoCount">0</div>
+            <div class="label">Videos</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">🎵</div>
+            <div class="value" id="audioCount">0</div>
+            <div class="label">Audio</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">📝</div>
+            <div class="value" id="textCount">0</div>
+            <div class="label">Text</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">⭐</div>
+            <div class="value" id="favCount">0</div>
+            <div class="label">Favorites</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">💾</div>
+            <div class="value" id="storageSize">0 MB</div>
+            <div class="label">Storage</div>
+        </div>
+    </div>
+
+    <!-- View Tabs -->
+    <div class="view-tabs">
+        <button class="view-tab active" data-view="grid">🔲 Grid</button>
+        <button class="view-tab" data-view="timeline">📅 Timeline</button>
+        <button class="view-tab" data-view="favorites">⭐ Favorites</button>
+        <button class="view-tab" data-type="all">All</button>
+        <button class="view-tab" data-type="image">🖼️ Images</button>
+        <button class="view-tab" data-type="video">🎬 Videos</button>
+        <button class="view-tab" data-type="audio">🎵 Audio</button>
+        <button class="view-tab" data-type="text">📝 Text</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <input type="text" class="filter-input" id="searchInput" placeholder="🔍 Search caption, sender...">
+        <select class="filter-select" id="sortSelect">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="largest">Largest First</option>
+            <option value="smallest">Smallest First</option>
+        </select>
+        <input type="date" class="filter-input" id="dateFilter">
+        <button class="btn btn-primary" onclick="loadData()">🔄 Refresh</button>
+        <button class="btn btn-success" onclick="bulkDownload()">📦 Download ZIP</button>
+        <button class="btn btn-danger" onclick="clearAll()">🗑️ Clear All</button>
+    </div>
+
+    <!-- Grid View -->
+    <div class="media-grid" id="mediaGrid"></div>
+
+    <!-- Timeline View -->
+    <div class="timeline-view" id="timelineView" style="display: none;"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="icon">📭</div>
+        <h3>No Downloads Yet</h3>
+        <p>Status media will appear here when downloaded automatically.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination">
+        <button class="btn btn-outline" id="prevBtn" onclick="prevPage()">← Previous</button>
+        <span class="page-info" id="pageInfo">Page 1 of 1</span>
+        <button class="btn btn-outline" id="nextBtn" onclick="nextPage()">Next →</button>
+    </div>
+
+    <!-- Selection Bar -->
+    <div class="selection-bar" id="selectionBar">
+        <span><span id="selectedCount">0</span> selected</span>
+        <div>
+            <button class="btn btn-success" onclick="downloadSelected()">📥 Download</button>
+            <button class="btn btn-danger" onclick="deleteSelected()">🗑️ Delete</button>
+            <button class="btn btn-outline" onclick="cancelSelection()">✖️ Cancel</button>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <span class="modal-nav prev" onclick="prevMedia()">❮</span>
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">×</span>
+            <div id="modalContent"></div>
+            <div class="modal-info" id="modalInfo"></div>
+        </div>
+        <span class="modal-nav next" onclick="nextMedia()">❯</span>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h3>⚙️ Download Settings</h3>
+            <button class="btn btn-outline" onclick="closeSettings()">✕</button>
+        </div>
+        <div class="settings-body">
+            <div class="setting-group">
+                <h4>📥 Auto Download</h4>
+                <div class="setting-item">
+                    <label>Enable Auto Download</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="autoDownload" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>Download Images</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="downloadImages" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>Download Videos</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="downloadVideos" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>Download Audio</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="downloadAudio" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>Download Text Status</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="downloadText" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h4>🗑️ Auto Cleanup</h4>
+                <div class="setting-item">
+                    <label>Auto Delete Old Media</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="autoDeleteEnabled">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>Delete after (days)</label>
+                    <input type="number" class="filter-input" id="autoDeleteDays" value="7" min="1" max="365" style="width: 80px;">
+                </div>
+                <div class="setting-item">
+                    <label>Max Storage (MB)</label>
+                    <input type="number" class="filter-input" id="maxStorageMB" value="500" min="50" max="10000" style="width: 100px;">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="saveSettings()" style="width: 100%; margin-top: 20px;">
+                💾 Save Settings
+            </button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentView = 'grid';
+        let currentType = 'all';
+        let favoritesOnly = false;
+        let selectionMode = false;
+        let selectedItems = new Set();
+        let allMediaData = [];
+        let currentModalIndex = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            loadStats();
+            loadSettings();
+            setupEventListeners();
+        });
+
+        socket.on('newDownload', () => {
+            loadData();
+            loadStats();
+        });
+
+        socket.on('downloadStats', updateStats);
+
+        function setupEventListeners() {
+            document.querySelectorAll('.view-tab[data-view]').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.view-tab[data-view]').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentView = tab.dataset.view;
+                    favoritesOnly = currentView === 'favorites';
+                    loadData();
+                });
+            });
+
+            document.querySelectorAll('.view-tab[data-type]').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.view-tab[data-type]').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentType = tab.dataset.type;
+                    currentPage = 1;
+                    loadData();
+                });
+            });
+
+            document.getElementById('searchInput').addEventListener('input', debounce(() => {
+                currentPage = 1;
+                loadData();
+            }, 500));
+
+            document.getElementById('sortSelect').addEventListener('change', loadData);
+
+            document.getElementById('dateFilter').addEventListener('change', () => {
+                currentPage = 1;
+                loadData();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    closeSettings();
+                }
+                if (document.getElementById('previewModal').classList.contains('active')) {
+                    if (e.key === 'ArrowLeft') prevMedia();
+                    if (e.key === 'ArrowRight') nextMedia();
+                }
+            });
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        async function loadData() {
+            const params = new URLSearchParams({
+                type: currentType,
+                search: document.getElementById('searchInput').value,
+                sortBy: document.getElementById('sortSelect').value,
+                date: document.getElementById('dateFilter').value,
+                favorites: favoritesOnly,
+                page: currentPage,
+                limit: 20
+            });
+
+            try {
+                if (currentView === 'timeline') {
+                    const res = await fetch('/api/downloads/view/timeline');
+                    const timeline = await res.json();
+                    renderTimeline(timeline);
+                } else {
+                    const res = await fetch(`/api/downloads?${params}`);
+                    const data = await res.json();
+                    allMediaData = data.data;
+                    renderGrid(data.data);
+                    updatePagination(data);
+                }
+            } catch (e) {
+                console.error('Error loading data:', e);
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/downloads/stats');
+                const stats = await res.json();
+                updateStats(stats);
+            } catch (e) {
+                console.error('Error loading stats:', e);
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('totalCount').textContent = stats.total || 0;
+            document.getElementById('imageCount').textContent = stats.images || 0;
+            document.getElementById('videoCount').textContent = stats.videos || 0;
+            document.getElementById('audioCount').textContent = stats.audio || 0;
+            document.getElementById('textCount').textContent = stats.text || 0;
+            document.getElementById('favCount').textContent = stats.favorites || 0;
+            document.getElementById('storageSize').textContent = stats.totalSize || '0 KB';
+        }
+
+        function renderGrid(items) {
+            const grid = document.getElementById('mediaGrid');
+            const timeline = document.getElementById('timelineView');
+            const empty = document.getElementById('emptyState');
+            const pagination = document.getElementById('pagination');
+
+            grid.style.display = 'grid';
+            timeline.style.display = 'none';
+
+            if (!items || items.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                pagination.style.display = 'none';
+                return;
+            }
+
+            empty.style.display = 'none';
+            pagination.style.display = 'flex';
+
+            grid.innerHTML = items.map((item, index) => createMediaCard(item, index)).join('');
+
+            if (selectionMode) {
+                document.getElementById('mediaGrid').classList.add('selection-mode');
+            }
+        }
+
+        function createMediaCard(item, index) {
+            const initial = (item.sender || 'U')[0].toUpperCase();
+            const isSelected = selectedItems.has(item.id);
+
+            let preview = '';
+            if (item.type === 'image' || item.type === 'sticker') {
+                preview = `<img src="${item.path}" alt="Status" onclick="openModal(${index})">`;
+            } else if (item.type === 'video') {
+                preview = `
+                    <video onclick="openModal(${index})">
+                        <source src="${item.path}" type="${item.mimetype || 'video/mp4'}">
+                    </video>
+                    ${item.durationFormatted ? `<span class="duration-badge">${item.durationFormatted}</span>` : ''}
+                `;
+            } else if (item.type === 'audio') {
+                preview = `<div class="media-icon">🎵</div>`;
+            } else if (item.type === 'text') {
+                preview = `<div class="text-preview">${escapeHtml(item.content || '')}</div>`;
+            } else {
+                preview = `<div class="media-icon">📄</div>`;
+            }
+
+            const downloadBtn = item.type !== 'text' 
+                ? `<a href="${item.path}" download class="btn btn-success">📥</a>`
+                : `<button class="btn btn-success" onclick="copyText('${escapeHtml(item.content || '')}')">📋</button>`;
+
+            return `
+                <div class="media-card" data-id="${item.id}">
+                    <div class="media-preview">
+                        <span class="media-type-badge badge-${item.type}">${item.type}</span>
+                        <div class="selection-checkbox ${isSelected ? 'checked' : ''}" onclick="toggleSelection('${item.id}')"></div>
+                        <button class="favorite-btn ${item.isFavorite ? 'active' : ''}" onclick="toggleFavorite('${item.id}')">
+                            ${item.isFavorite ? '❤️' : '🤍'}
+                        </button>
+                        ${preview}
+                    </div>
+                    <div class="media-info">
+                        <div class="sender-row">
+                            <div class="avatar">${initial}</div>
+                            <div class="sender-details">
+                                <div class="sender-name">${escapeHtml(item.sender || 'Unknown')}</div>
+                                <div class="sender-number">+${item.senderNumber || 'N/A'}</div>
+                            </div>
+                        </div>
+                        <div class="media-meta">
+                            <span>${item.downloadedAt || ''}</span>
+                            <span>${item.size || ''}</span>
+                        </div>
+                        ${item.caption ? `<div class="media-caption">${escapeHtml(item.caption)}</div>` : ''}
+                        <div class="media-actions">
+                            ${downloadBtn}
+                            <button class="btn btn-danger" onclick="deleteItem('${item.id}')">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTimeline(timeline) {
+            const grid = document.getElementById('mediaGrid');
+            const timelineDiv = document.getElementById('timelineView');
+            const empty = document.getElementById('emptyState');
+            const pagination = document.getElementById('pagination');
+
+            grid.style.display = 'none';
+            timelineDiv.style.display = 'block';
+            pagination.style.display = 'none';
+
+            if (!timeline || timeline.length === 0) {
+                timelineDiv.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+
+            timelineDiv.innerHTML = timeline.map(day => `
+                <div class="timeline-date">
+                    <h3>${day.displayDate}</h3>
+                    <div class="counts">
+                        ${day.counts.image ? `🖼️ ${day.counts.image}` : ''}
+                        ${day.counts.video ? `🎬 ${day.counts.video}` : ''}
+                        ${day.counts.audio ? `🎵 ${day.counts.audio}` : ''}
+                        ${day.counts.text ? `📝 ${day.counts.text}` : ''}
+                    </div>
+                </div>
+                <div class="timeline-items">
+                    ${day.items.slice(0, 20).map(item => {
+                        if (item.type === 'image' || item.type === 'sticker') {
+                            return `<div class="timeline-item" onclick="openSingleModal('${item.path}', 'image')">
+                                <img src="${item.path}" alt="">
+                            </div>`;
+                        } else if (item.type === 'video') {
+                            return `<div class="timeline-item" onclick="openSingleModal('${item.path}', 'video')">
+                                <video><source src="${item.path}"></video>
+                            </div>`;
+                        }
+                        return '';
+                    }).join('')}
+                </div>
+            `).join('');
+        }
+
+        function updatePagination(data) {
+            totalPages = data.totalPages || 1;
+            document.getElementById('pageInfo').textContent = `Page ${data.page} of ${totalPages}`;
+            document.getElementById('prevBtn').disabled = data.page <= 1;
+            document.getElementById('nextBtn').disabled = !data.hasMore;
+        }
+
+        function prevPage() { if (currentPage > 1) { currentPage--; loadData(); } }
+        function nextPage() { if (currentPage < totalPages) { currentPage++; loadData(); } }
+
+        function openModal(index) {
+            if (selectionMode) return;
+            currentModalIndex = index;
+            showModalContent();
+            document.getElementById('previewModal').classList.add('active');
+        }
+
+        function openSingleModal(src, type) {
+            const modal = document.getElementById('previewModal');
+            const content = document.getElementById('modalContent');
+            
+            if (type === 'image') {
+                content.innerHTML = `<img src="${src}" alt="Preview">`;
+            } else if (type === 'video') {
+                content.innerHTML = `<video controls autoplay><source src="${src}"></video>`;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function showModalContent() {
+            const item = allMediaData[currentModalIndex];
+            if (!item) return;
+
+            const content = document.getElementById('modalContent');
+            const info = document.getElementById('modalInfo');
+
+            if (item.type === 'image' || item.type === 'sticker') {
+                content.innerHTML = `<img src="${item.path}" alt="Preview">`;
+            } else if (item.type === 'video') {
+                content.innerHTML = `<video controls autoplay><source src="${item.path}"></video>`;
+            } else if (item.type === 'audio') {
+                content.innerHTML = `<audio controls autoplay><source src="${item.path}"></audio>`;
+            }
+
+            info.innerHTML = `${item.sender} • ${item.downloadedAt}`;
+        }
+
+        function prevMedia() {
+            if (currentModalIndex > 0) {
+                currentModalIndex--;
+                showModalContent();
+            }
+        }
+
+        function nextMedia() {
+            if (currentModalIndex < allMediaData.length - 1) {
+                currentModalIndex++;
+                showModalContent();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('previewModal').classList.remove('active');
+            document.getElementById('modalContent').innerHTML = '';
+        }
+
+        function toggleSelectionMode() {
+            selectionMode = !selectionMode;
+            selectedItems.clear();
+            
+            if (selectionMode) {
+                document.getElementById('mediaGrid').classList.add('selection-mode');
+                document.getElementById('selectionBar').classList.add('active');
+            } else {
+                document.getElementById('mediaGrid').classList.remove('selection-mode');
+                document.getElementById('selectionBar').classList.remove('active');
+            }
+            
+            updateSelectionCount();
+            loadData();
+        }
+
+        function toggleSelection(id) {
+            if (selectedItems.has(id)) {
+                selectedItems.delete(id);
+            } else {
+                selectedItems.add(id);
+            }
+            updateSelectionCount();
+            loadData();
+        }
+
+        function updateSelectionCount() {
+            document.getElementById('selectedCount').textContent = selectedItems.size;
+        }
+
+        function cancelSelection() {
+            selectionMode = false;
+            selectedItems.clear();
+            document.getElementById('mediaGrid').classList.remove('selection-mode');
+            document.getElementById('selectionBar').classList.remove('active');
+            loadData();
+        }
+
+        async function deleteSelected() {
+            if (selectedItems.size === 0) return;
+            if (!confirm(`Delete ${selectedItems.size} items?`)) return;
+
+            await fetch('/api/downloads/bulk-delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: Array.from(selectedItems) })
+            });
+
+            cancelSelection();
+            loadData();
+            loadStats();
+        }
+
+        async function downloadSelected() {
+            if (selectedItems.size === 0) return;
+
+            const res = await fetch('/api/downloads/bulk-download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: Array.from(selectedItems) })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                window.location.href = data.path;
+            }
+        }
+
+        async function toggleFavorite(id) {
+            await fetch(`/api/downloads/${id}/favorite`, { method: 'POST' });
+            loadData();
+            loadStats();
+        }
+
+        async function deleteItem(id) {
+            if (!confirm('Delete this item?')) return;
+            await fetch(`/api/downloads/${id}`, { method: 'DELETE' });
+            loadData();
+            loadStats();
+        }
+
+        async function clearAll() {
+            if (!confirm('Delete ALL downloads? This cannot be undone!')) return;
+            const keepFavorites = confirm('Keep favorite items?');
+            await fetch(`/api/downloads?keepFavorites=${keepFavorites}`, { method: 'DELETE' });
+            loadData();
+            loadStats();
+        }
+
+        async function bulkDownload() {
+            const res = await fetch('/api/downloads/bulk-download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ options: { type: currentType !== 'all' ? currentType : null } })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                window.location.href = data.path;
+            } else {
+                alert('Error creating ZIP: ' + (data.error || 'Unknown error'));
+            }
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+        }
+
+        function openSettings() {
+            document.getElementById('settingsPanel').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsPanel').classList.remove('active');
+        }
+
+        async function loadSettings() {
+            try {
+                const res = await fetch('/api/downloads/settings');
+                const settings = await res.json();
+                
+                document.getElementById('autoDownload').checked = settings.autoDownload !== false;
+                document.getElementById('downloadImages').checked = settings.downloadImages !== false;
+                document.getElementById('downloadVideos').checked = settings.downloadVideos !== false;
+                document.getElementById('downloadAudio').checked = settings.downloadAudio !== false;
+                document.getElementById('downloadText').checked = settings.downloadText !== false;
+                document.getElementById('autoDeleteEnabled').checked = settings.autoDeleteEnabled || false;
+                document.getElementById('autoDeleteDays').value = settings.autoDeleteDays || 7;
+                document.getElementById('maxStorageMB').value = settings.maxStorageMB || 500;
+            } catch (e) {
+                console.error('Error loading settings:', e);
+            }
+        }
+
+        async function saveSettings() {
+            const settings = {
+                autoDownload: document.getElementById('autoDownload').checked,
+                downloadImages: document.getElementById('downloadImages').checked,
+                downloadVideos: document.getElementById('downloadVideos').checked,
+                downloadAudio: document.getElementById('downloadAudio').checked,
+                downloadText: document.getElementById('downloadText').checked,
+                autoDeleteEnabled: document.getElementById('autoDeleteEnabled').checked,
+                autoDeleteDays: parseInt(document.getElementById('autoDeleteDays').value) || 7,
+                maxStorageMB: parseInt(document.getElementById('maxStorageMB').value) || 500
+            };
+
+            await fetch('/api/downloads/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+
+            closeSettings();
+            alert('Settings saved!');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
