@@ -1,0 +1,40 @@
+# Node modules
+node_modules/
+
+# Authentication data (IMPORTANT - DO NOT SHARE!)
+auth_info/
+auth_info_baileys/
+
+# Data files
+data/
+downloads/
+
+# Environment files
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Build files
+dist/
+build/
+
+# Config with passwords (if you have secrets)
+config.local.js
