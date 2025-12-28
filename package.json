@@ -1,0 +1,24 @@
+{
+  "name": "whatsapp-status-bot",
+  "version": "3.0.0",
+  "description": "WhatsApp Status Auto View, Like & Download Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "clean": "rm -rf auth_info downloads/images/* downloads/videos/* downloads/audio/*"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.6.0",
+    "archiver": "^6.0.2",
+    "express": "^4.18.2",
+    "node-cron": "^3.0.3",
+    "pino": "^8.16.0",
+    "qrcode": "^1.5.3",
+    "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
